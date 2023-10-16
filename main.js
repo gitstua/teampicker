@@ -2,10 +2,11 @@
 function generateTeams() {
 
   const playersTextValue = document.getElementById("players").value;
-  const teamDarkText = document.getElementById("teamDark");
-  const teamLightText = document.getElementById("teamLight");
-  const reservesText = document.getElementById("reserves");
+  const outputElement = document.getElementById("output");
+  const playersPerTeam = document.getElementById("playersPerTeam").value;
 
+  //convert playersperTeam to number
+  const playersPerTeamNumber = Number(playersPerTeam);
 
   //convert playersTextValue to array split by carriage return
   const players = playersTextValue.split("\n");
@@ -18,7 +19,7 @@ function generateTeams() {
   }
 
   // Check if there are enough players
-  if (players.length < 12) {
+  if (players.length < playersPerTeamNumber*2) {
     throw new Error('Not enough players');
   }
 
@@ -29,19 +30,38 @@ function generateTeams() {
   }
 
   // Divide the shuffled players into two teams
-  const teamDark = players.slice(0, 5);
-  const teamLight = players.slice(5, 10);
+  const teamDark = players.slice(0, playersPerTeamNumber);
+  const teamLight = players.slice(playersPerTeamNumber, playersPerTeamNumber*2);
 
   // Put the remaining players in reserves
-  const reserves = players.slice(10);
+  const reserves = players.slice(playersPerTeamNumber*2);
 
-  // Update the HTML with the teams and reserves, split by carriage return
-
-  teamDarkText.innerHTML = teamDark.join("\n");
-  teamLightText.innerHTML = teamLight.join("\n");
-  reservesText.innerHTML = reserves.join("\n");
+  // Update the output element with the teams and reserves
+  outputElement.innerHTML = `
+        <h3>Teams</h3>
+        <p>Dark: ${teamDark.join(", ")}</p>
+        <p>Light: ${teamLight.join(", ")}</p>
+        <h3>Reserves</h3>
+        <p>${reserves.join(", ")}</p>
+    `;
 
   // Return the teams and reserves
   return [teamDark, teamLight, reserves];
 }
 
+// Function to handle file input change
+function handleFileInput(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    const contents = event.target.result;
+    document.getElementById("players").value = contents;
+  };
+  reader.readAsText(file);
+}
+
+// Add event listener to file input
+document.addEventListener("DOMContentLoaded", function () {
+  const fileInput = document.getElementById("fileInput");
+  fileInput.addEventListener("change", handleFileInput);
+});

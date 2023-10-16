@@ -49,3 +49,28 @@ body {
 #players {
   overflow: scroll;
 }
+
+
+#instructions li {
+  list-style-type: none;
+  margin-bottom: 1em;
+
+  font-weight: bold;
+
+}
+
+#instructions li input{
+  color: black;
+}
+
+#instructions{
+  /* add border bottom */
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 3em;
+}
+
+footer {
+  background-color: lightgray;
+  padding: 10px;
+  text-align: center;
+}
